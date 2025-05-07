@@ -70,6 +70,7 @@ impl RaydiumClmmDEX {
     }
   }
 
+// 用于获取最新的 Raydium 流动性池数，这个是通过 raydium 的 api 获取最新的 dat
 pub async fn fetch_data_raydium_clmm() -> Result<(), Box<dyn std::error::Error>> {
     let response = get("https://api.raydium.io/v2/ammV3/ammPools").await?;
     // info!("response: {:?}", response);

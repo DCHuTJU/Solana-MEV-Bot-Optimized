@@ -60,12 +60,12 @@ async fn main() -> Result<()> {
     // stream.write_all(message).await?;
     // info!("🛜  Sent: {} tx to executor", String::from_utf8_lossy(message));
 
+    // vec! 创建 Vec<T>类型的实例，Vec 是 Rust 中的动态数组类型，T 是元素的类型
     let mut inputs_vec = vec![
         InputVec{
             tokens_to_arb: vec![
                 TokenInArb{address: String::from("So11111111111111111111111111111111111111112"), symbol: String::from("SOL")}, // Base token here
                 TokenInArb{address: String::from("4Cnk9EPnW5ixfLZatCPJjDB1PUtcRpVVgTQukm9epump"), symbol: String::from("DADDY-ANSEM")},
- 
             ],
             include_1hop: true,
             include_2hop: true,
@@ -135,15 +135,17 @@ async fn main() -> Result<()> {
     info!("Starting MEV_Bot_Solana");
     info!("⚠️⚠️ New fresh pools fetched on METEORA and RAYDIUM are excluded because a lot of time there have very low liquidity, potentially can be used on subscribe log strategy");
     info!("⚠️⚠️ Liquidity is fetch to API and can be outdated on Radyium Pool");
-
+    // Tokio 库提供的一个结构，允许你创建多个异步任务并等待它们完成
     let mut set: JoinSet<()> = JoinSet::new();
     
     // // The first token is the base token (here SOL)
+    // 得到所有 token 地址，其中第一个是 base token，也就是 SOL
     let tokens_to_arb: Vec<TokenInArb> = inputs_vec.clone().into_iter().flat_map(|input| input.tokens_to_arb).collect();
 
     info!("Open Socket IO channel...");
     let env = Env::new();
     
+    // 处理从WebSocket接收到的不同类型的消息
     let callback = |payload: Payload, socket: Client| {
         async move {
             match payload {
